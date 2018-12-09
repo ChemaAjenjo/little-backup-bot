@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.logging.BotLogger;
 
@@ -30,16 +31,18 @@ public class CardBackupCmd implements Command {
 			Path storagePath = Paths.get(DEV_SDA1);
 			Path cardPath = Paths.get(DEV_SDB1);
 
-			bot.execute(new SendMessage().setChatId(chatId).setText("Please, insert *storage device*"));
-			while (!Files.exists(storagePath)) {
+			bot.execute(new SendMessage().setParseMode(ParseMode.MARKDOWN).setChatId(chatId)
+					.setText("Insert *storage device*"));
+			while (Files.notExists(storagePath)) {
 				storagePath = Paths.get(DEV_SDA1);
 				Thread.sleep(1000L);
 			}
 			// When the USB storage device is detected, mount it
 			Runtime.getRuntime().exec(new String[] { MOUNT_CMD, DEV_SDA1, STORAGE_MOUNT_POINT }).waitFor();
+			BotLogger.info(TAG, "Mounted " + STORAGE_MOUNT_POINT);
 
-			bot.execute(new SendMessage().setChatId(chatId).setText("Please, insert *card*"));
-			while (!Files.exists(cardPath)) {
+			bot.execute(new SendMessage().setParseMode(ParseMode.MARKDOWN).setChatId(chatId).setText("Insert *card*"));
+			while (Files.notExists(cardPath)) {
 				cardPath = Paths.get(DEV_SDB1);
 				Thread.sleep(1000L);
 			}
@@ -53,12 +56,13 @@ public class CardBackupCmd implements Command {
 				String label = Utils.getLabelDevice(DEV_SDB1);
 
 				// Set the backup path
-				String backupPath = STORAGE_MOUNT_POINT + File.separator + label + File.separator
-						+ Utils.getFileId(CARD_MOUNT_POINT);
+				String backupPath = STORAGE_MOUNT_POINT + File.separator + Utils.getFileId(CARD_MOUNT_POINT);
 
 				BotLogger.debug(TAG, "launch rsync command");
 				// Perform backup using rsync
-				RSync rsync = new RSync().source(STORAGE_MOUNT_POINT + File.separator).destination(backupPath)
+				bot.execute(new SendMessage().setParseMode(ParseMode.MARKDOWN).setChatId(chatId)
+						.setText("Making backup... Please wait."));
+				RSync rsync = new RSync().source(CARD_MOUNT_POINT + File.separator).destination(backupPath)
 						.archive(true).verbose(true).exclude(new String[] { "*.id", "*.dat", "IndexerVolumeGuid" });
 				CollectingProcessOutput output = rsync.execute();
 

@@ -6,6 +6,7 @@ import static com.littlebackup.utils.Constants.TG_READER_BACKUP_CMD;
 import static com.littlebackup.utils.Constants.TG_START_CMD;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.logging.BotLogger;
@@ -39,7 +40,7 @@ public class LittleBackupBot extends TelegramLongPollingBot {
 		try {
 			Long chatId = update.getMessage().getChatId();
 			this.message.setChatId(chatId);
-			this.message.setParseMode("Markdown");
+			this.message.setParseMode(ParseMode.MARKDOWN);
 			if ((chatId.equals(this.botConfig.getCreatorId())) && (update.hasMessage())) {
 				if (update.getMessage().getText().startsWith(COMMAND_PREFIX)) {
 
