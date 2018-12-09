@@ -8,13 +8,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.logging.BotLogger;
 
 public class SetupCmd implements Command {
 
 	public static final String TAG = SetupCmd.class.getSimpleName();
 
-	public String executeCommand() {
+	@Override
+	public String executeCommand(TelegramLongPollingBot bot, Long chatId) {
 
 		try {
 			String output = "Created folders: " + System.lineSeparator();

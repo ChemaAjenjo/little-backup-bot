@@ -1,10 +1,8 @@
 package com.littlebackup.box.commands;
 
-import static com.littlebackup.utils.Constants.CARD_MOUNT_POINT;
 import static com.littlebackup.utils.Constants.DEV_SDA1;
 import static com.littlebackup.utils.Constants.DEV_SDB1;
 import static com.littlebackup.utils.Constants.HOME_DIR;
-import static com.littlebackup.utils.Constants.MICROSD_MOUNT_POINT;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -12,40 +10,36 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.logging.BotLogger;
 
 import com.github.fracpete.processoutput4j.output.CollectingProcessOutput;
 import com.github.fracpete.rsync4j.RSync;
 import com.littlebackup.utils.Utils;
 
-public class ReaderBackupCmd implements Command {
+public class CardBackupCmd implements Command {
 
-	public static final String TAG = ReaderBackupCmd.class.getSimpleName();
+	public static final String TAG = CardBackupCmd.class.getSimpleName();
 
 	@Override
 	public String executeCommand(TelegramLongPollingBot bot, Long chatId) {
 
-		String output = "";
+		String output = "backup finished";
 
 		try {
-			Path cardReaderPath = Paths.get(DEV_SDA1);
-			Path microSdReaderPath = Paths.get(DEV_SDB1);
+			Path storagePath = Paths.get(DEV_SDA1);
+			Path cardPath = Paths.get(DEV_SDB1);
 
-			while ((!Files.exists(cardReaderPath)) || (!Files.exists(microSdReaderPath))) {
-				cardReaderPath = Paths.get(DEV_SDA1);
-				microSdReaderPath = Paths.get(DEV_SDB1);
+			bot.execute(new SendMessage().setChatId(chatId).setText("Please, insert *storage device*"));
+			while (!Files.exists(storagePath)) {
+				storagePath = Paths.get(DEV_SDA1);
 				Thread.sleep(1000L);
-				BotLogger.info(TAG, "cardReaderPath.exists= " + (!Files.exists(cardReaderPath)));
-				BotLogger.info(TAG, "microSdReaderPath.exists= " + (!Files.exists(microSdReaderPath)));
 			}
 
-			Files.createDirectories(Paths.get(HOME_DIR));
-
-			if (Files.exists(cardReaderPath)) {
-				output = output + launchBackup(DEV_SDA1, CARD_MOUNT_POINT) + System.lineSeparator();
-			}
-			if (Files.exists(microSdReaderPath)) {
-				output = output + launchBackup(DEV_SDB1, MICROSD_MOUNT_POINT) + System.lineSeparator();
+			bot.execute(new SendMessage().setChatId(chatId).setText("Please, insert *card*"));
+			while (!Files.exists(cardPath)) {
+				cardPath = Paths.get(DEV_SDB1);
+				Thread.sleep(1000L);
 			}
 
 		} catch (Exception e) {
