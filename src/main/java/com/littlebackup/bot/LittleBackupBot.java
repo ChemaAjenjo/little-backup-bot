@@ -50,7 +50,7 @@ public class LittleBackupBot extends TelegramLongPollingBot {
 					case TG_START_CMD:
 						if (Utils.existsFolders()) {
 							execute(this.message.setText("Starting Setup"));
-							execute(this.message.setText("`" + new SetupCmd().executeCommand(this, chatId) + "`"));
+							execute(this.message.setText("`" + new SetupCmd().execute(this, chatId) + "`"));
 							execute(this.message.setText("Finished setup"));
 						} else {
 							execute(this.message.setText("Raspberry pi is configured"));
@@ -60,8 +60,7 @@ public class LittleBackupBot extends TelegramLongPollingBot {
 					case TG_READER_BACKUP_CMD:
 						if (!Utils.existsFolders()) {
 							execute(this.message.setText("Starting *reader-backup*"));
-							execute(this.message
-									.setText("`" + new ReaderBackupCmd().executeCommand(this, chatId) + "`"));
+							execute(this.message.setText("`" + new ReaderBackupCmd().execute(this, chatId) + "`"));
 							execute(this.message.setText("Finished *reader-backup*"));
 						} else {
 							execute(this.message
@@ -71,7 +70,7 @@ public class LittleBackupBot extends TelegramLongPollingBot {
 					case TG_CARD_BACKUP_CMD:
 						if (!Utils.existsFolders()) {
 							execute(this.message.setText("Starting *card-backup*"));
-							execute(this.message.setText("`" + new CardBackupCmd().executeCommand(this, chatId) + "`"));
+							execute(this.message.setText("`" + new CardBackupCmd().execute(this, chatId) + "`"));
 							execute(this.message.setText("Finished *card-backup*"));
 						} else {
 							execute(this.message

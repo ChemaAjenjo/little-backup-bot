@@ -23,7 +23,7 @@ public class ReaderBackupCmd implements Command {
 	public static final String TAG = ReaderBackupCmd.class.getSimpleName();
 
 	@Override
-	public String executeCommand(TelegramLongPollingBot bot, Long chatId) {
+	public String execute(TelegramLongPollingBot bot, Long chatId) {
 
 		String output = "";
 

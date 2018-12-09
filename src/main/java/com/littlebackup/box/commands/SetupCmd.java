@@ -16,7 +16,7 @@ public class SetupCmd implements Command {
 	public static final String TAG = SetupCmd.class.getSimpleName();
 
 	@Override
-	public String executeCommand(TelegramLongPollingBot bot, Long chatId) {
+	public String execute(TelegramLongPollingBot bot, Long chatId) {
 
 		try {
 			String output = "Created folders: " + System.lineSeparator();

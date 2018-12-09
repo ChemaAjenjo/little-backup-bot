@@ -22,7 +22,7 @@ public class CardBackupCmd implements Command {
 	public static final String TAG = CardBackupCmd.class.getSimpleName();
 
 	@Override
-	public String executeCommand(TelegramLongPollingBot bot, Long chatId) {
+	public String execute(TelegramLongPollingBot bot, Long chatId) {
 
 		String output = "backup finished";
 

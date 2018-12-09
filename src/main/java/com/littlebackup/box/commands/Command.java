@@ -4,6 +4,6 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 
 public interface Command {
 
-	public String executeCommand(TelegramLongPollingBot bot, Long chatId);
+	public String execute(TelegramLongPollingBot bot, Long chatId);
 
 }
