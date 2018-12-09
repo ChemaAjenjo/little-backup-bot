@@ -5,6 +5,7 @@ import static com.littlebackup.utils.Constants.DEV_SDA1;
 import static com.littlebackup.utils.Constants.DEV_SDB1;
 import static com.littlebackup.utils.Constants.HOME_DIR;
 import static com.littlebackup.utils.Constants.MICROSD_MOUNT_POINT;
+import static com.littlebackup.utils.Constants.MOUNT_CMD;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -59,7 +60,7 @@ public class ReaderBackupCmd implements Command {
 	private String launchBackup(String device, String mountPoint) throws Exception {
 
 		BotLogger.debug(TAG, "Mounting " + device + " into " + mountPoint);
-		Runtime.getRuntime().exec(new String[] { "mount", device, mountPoint }).waitFor();
+		Runtime.getRuntime().exec(new String[] { MOUNT_CMD, device, mountPoint }).waitFor();
 
 		String fileIdName = Utils.getFileId(mountPoint);
 
