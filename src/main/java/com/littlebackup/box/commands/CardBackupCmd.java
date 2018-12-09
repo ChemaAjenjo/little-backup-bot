@@ -81,8 +81,8 @@ public class CardBackupCmd implements Command {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			BotLogger.error(TAG, e.getMessage());
+			e.printStackTrace();
 			return e.getMessage();
 		}
 		return "";

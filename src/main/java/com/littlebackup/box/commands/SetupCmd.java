@@ -40,8 +40,8 @@ public class SetupCmd implements Command {
 			return output;
 
 		} catch (IOException e) {
-			e.printStackTrace();
 			BotLogger.error(TAG, e.getMessage());
+			e.printStackTrace();
 			return e.getMessage();
 		}
 	}
