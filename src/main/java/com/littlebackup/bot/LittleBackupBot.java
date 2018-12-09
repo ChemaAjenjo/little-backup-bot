@@ -2,7 +2,9 @@ package com.littlebackup.bot;
 
 import static com.littlebackup.utils.Constants.COMMAND_PREFIX;
 import static com.littlebackup.utils.Constants.TG_CARD_BACKUP_CMD;
+import static com.littlebackup.utils.Constants.TG_POWEROFF_CMD;
 import static com.littlebackup.utils.Constants.TG_READER_BACKUP_CMD;
+import static com.littlebackup.utils.Constants.TG_REBOOT_CMD;
 import static com.littlebackup.utils.Constants.TG_START_CMD;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -14,6 +16,7 @@ import org.telegram.telegrambots.meta.logging.BotLogger;
 import com.littlebackup.bot.config.LittleBackupBotConfig;
 import com.littlebackup.box.commands.CardBackupCmd;
 import com.littlebackup.box.commands.ReaderBackupCmd;
+import com.littlebackup.box.commands.RebootCmd;
 import com.littlebackup.box.commands.SetupCmd;
 import com.littlebackup.utils.Utils;
 
@@ -77,6 +80,13 @@ public class LittleBackupBot extends TelegramLongPollingBot {
 							execute(this.message
 									.setText("Raspberry pi is not configured, please execute /start command"));
 						}
+						break;
+
+					case TG_REBOOT_CMD:
+						new RebootCmd().execute(this, chatId);
+						break;
+					case TG_POWEROFF_CMD:
+						new RebootCmd().execute(this, chatId);
 						break;
 					}
 

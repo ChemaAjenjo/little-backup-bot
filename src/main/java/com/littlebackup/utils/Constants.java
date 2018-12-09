@@ -23,4 +23,5 @@ public class Constants {
 
 	public static String BLKID_CMD = "blkid";
 	public static String MOUNT_CMD = "mount";
+	public static String SHUTDOWN_CMD = "shutdown";
 }
