@@ -15,6 +15,7 @@ import org.telegram.telegrambots.meta.logging.BotLogger;
 
 import com.littlebackup.bot.config.LittleBackupBotConfig;
 import com.littlebackup.box.commands.CardBackupCmd;
+import com.littlebackup.box.commands.PowerOffCmd;
 import com.littlebackup.box.commands.ReaderBackupCmd;
 import com.littlebackup.box.commands.RebootCmd;
 import com.littlebackup.box.commands.SetupCmd;
@@ -86,7 +87,7 @@ public class LittleBackupBot extends TelegramLongPollingBot {
 						new RebootCmd().execute(this, chatId);
 						break;
 					case TG_POWEROFF_CMD:
-						new RebootCmd().execute(this, chatId);
+						new PowerOffCmd().execute(this, chatId);
 						break;
 					}
 
