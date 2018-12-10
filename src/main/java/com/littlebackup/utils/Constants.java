@@ -18,6 +18,7 @@ public class Constants {
 	public static final String TG_START_CMD = "start";
 	public static final String TG_READER_BACKUP_CMD = "readerbackup";
 	public static final String TG_CARD_BACKUP_CMD = "cardbackup";
+	public static final String TG_DEVICE_BACKUP_CMD = "devicebackup";
 	public static final String TG_REBOOT_CMD = "reboot";
 	public static final String TG_POWEROFF_CMD = "poweroff";
 

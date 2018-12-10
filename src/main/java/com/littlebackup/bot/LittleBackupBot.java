@@ -2,6 +2,7 @@ package com.littlebackup.bot;
 
 import static com.littlebackup.utils.Constants.COMMAND_PREFIX;
 import static com.littlebackup.utils.Constants.TG_CARD_BACKUP_CMD;
+import static com.littlebackup.utils.Constants.TG_DEVICE_BACKUP_CMD;
 import static com.littlebackup.utils.Constants.TG_POWEROFF_CMD;
 import static com.littlebackup.utils.Constants.TG_READER_BACKUP_CMD;
 import static com.littlebackup.utils.Constants.TG_REBOOT_CMD;
@@ -15,6 +16,7 @@ import org.telegram.telegrambots.meta.logging.BotLogger;
 
 import com.littlebackup.bot.config.LittleBackupBotConfig;
 import com.littlebackup.box.commands.CardBackupCmd;
+import com.littlebackup.box.commands.DeviceBackupCmd;
 import com.littlebackup.box.commands.PowerOffCmd;
 import com.littlebackup.box.commands.ReaderBackupCmd;
 import com.littlebackup.box.commands.RebootCmd;
@@ -72,6 +74,7 @@ public class LittleBackupBot extends TelegramLongPollingBot {
 									.setText("Raspberry pi is not configured, please execute /start command"));
 						}
 						break;
+						
 					case TG_CARD_BACKUP_CMD:
 						if (!Utils.existsFolders()) {
 							execute(this.message.setText("Starting *card-backup*"));
@@ -82,10 +85,22 @@ public class LittleBackupBot extends TelegramLongPollingBot {
 									.setText("Raspberry pi is not configured, please execute /start command"));
 						}
 						break;
+						
+					case TG_DEVICE_BACKUP_CMD:
+						if (!Utils.existsFolders()) {
+							execute(this.message.setText("Starting *device-backup*"));
+							execute(this.message.setText("`" + new DeviceBackupCmd().execute(this, chatId) + "`"));
+							execute(this.message.setText("Finished *device-backup*"));
+						} else {
+							execute(this.message
+									.setText("Raspberry pi is not configured, please execute /start command"));
+						}
+						break;
 
 					case TG_REBOOT_CMD:
 						new RebootCmd().execute(this, chatId);
 						break;
+					
 					case TG_POWEROFF_CMD:
 						new PowerOffCmd().execute(this, chatId);
 						break;

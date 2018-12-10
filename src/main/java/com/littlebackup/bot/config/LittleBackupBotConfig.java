@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource({ "classpath:little-backup-bot.properties" })
+@PropertySource({ "file:config/little-backup-bot.properties" })
 public class LittleBackupBotConfig {
 
 	@Value("${bot.token}")
