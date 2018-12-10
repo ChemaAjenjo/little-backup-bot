@@ -1,17 +1,18 @@
 package com.littlebackup.box.commands;
 
-import static com.littlebackup.utils.Constants.CARD_DEV;
 import static com.littlebackup.utils.Constants.CARD_MOUNT_POINT;
-import static com.littlebackup.utils.Constants.DEV;
+import static com.littlebackup.utils.Constants.DEV_SDA1;
+import static com.littlebackup.utils.Constants.DEV_SDB1;
 import static com.littlebackup.utils.Constants.HOME_DIR;
-import static com.littlebackup.utils.Constants.MICROSD_DEV;
 import static com.littlebackup.utils.Constants.MICROSD_MOUNT_POINT;
+import static com.littlebackup.utils.Constants.MOUNT_CMD;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.logging.BotLogger;
 
 import com.github.fracpete.processoutput4j.output.CollectingProcessOutput;
@@ -22,17 +23,18 @@ public class ReaderBackupCmd implements Command {
 
 	public static final String TAG = ReaderBackupCmd.class.getSimpleName();
 
-	public String executeCommand() {
+	@Override
+	public String execute(TelegramLongPollingBot bot, Long chatId) {
 
 		String output = "";
 
 		try {
-			Path cardReaderPath = Paths.get(DEV + File.separator + CARD_DEV);
-			Path microSdReaderPath = Paths.get(DEV + File.separator + MICROSD_DEV);
+			Path cardReaderPath = Paths.get(DEV_SDA1);
+			Path microSdReaderPath = Paths.get(DEV_SDB1);
 
 			while ((!Files.exists(cardReaderPath)) || (!Files.exists(microSdReaderPath))) {
-				cardReaderPath = Paths.get(DEV + File.separator + CARD_DEV);
-				microSdReaderPath = Paths.get(DEV + File.separator + MICROSD_DEV);
+				cardReaderPath = Paths.get(DEV_SDA1);
+				microSdReaderPath = Paths.get(DEV_SDB1);
 				Thread.sleep(1000L);
 				BotLogger.info(TAG, "cardReaderPath.exists= " + (!Files.exists(cardReaderPath)));
 				BotLogger.info(TAG, "microSdReaderPath.exists= " + (!Files.exists(microSdReaderPath)));
@@ -41,15 +43,15 @@ public class ReaderBackupCmd implements Command {
 			Files.createDirectories(Paths.get(HOME_DIR));
 
 			if (Files.exists(cardReaderPath)) {
-				output = output + launchBackup(CARD_DEV, CARD_MOUNT_POINT) + System.lineSeparator();
+				output = output + launchBackup(DEV_SDA1, CARD_MOUNT_POINT) + System.lineSeparator();
 			}
 			if (Files.exists(microSdReaderPath)) {
-				output = output + launchBackup(MICROSD_DEV, MICROSD_MOUNT_POINT) + System.lineSeparator();
+				output = output + launchBackup(DEV_SDB1, MICROSD_MOUNT_POINT) + System.lineSeparator();
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			BotLogger.error(TAG, e.getMessage());
+			e.printStackTrace();
 			return e.getMessage();
 		}
 		return output;
@@ -57,8 +59,8 @@ public class ReaderBackupCmd implements Command {
 
 	private String launchBackup(String device, String mountPoint) throws Exception {
 
-		BotLogger.debug(TAG, "Mounting " + DEV + File.separator + device + " into " + mountPoint);
-		Runtime.getRuntime().exec(new String[] { "mount", DEV + File.separator + device, mountPoint }).waitFor();
+		BotLogger.debug(TAG, "Mounting " + device + " into " + mountPoint);
+		Runtime.getRuntime().exec(new String[] { MOUNT_CMD, device, mountPoint }).waitFor();
 
 		String fileIdName = Utils.getFileId(mountPoint);
 
