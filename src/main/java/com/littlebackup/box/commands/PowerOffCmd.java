@@ -10,6 +10,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.logging.BotLogger;
 
+/** Turn off Raspberry pi */
+
 public class PowerOffCmd implements Command {
 
 	public static final String TAG = PowerOffCmd.class.getSimpleName();

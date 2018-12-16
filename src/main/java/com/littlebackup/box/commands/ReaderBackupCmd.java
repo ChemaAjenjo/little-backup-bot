@@ -19,6 +19,8 @@ import com.github.fracpete.processoutput4j.output.CollectingProcessOutput;
 import com.github.fracpete.rsync4j.RSync;
 import com.littlebackup.utils.Utils;
 
+/** Backup from multiple reader sdcard to local storage */
+
 public class ReaderBackupCmd implements Command {
 
 	public static final String TAG = ReaderBackupCmd.class.getSimpleName();
@@ -32,7 +34,7 @@ public class ReaderBackupCmd implements Command {
 			Path cardReaderPath = Paths.get(DEV_SDA1);
 			Path microSdReaderPath = Paths.get(DEV_SDB1);
 
-			while ((!Files.exists(cardReaderPath)) || (!Files.exists(microSdReaderPath))) {
+			while (Files.notExists(cardReaderPath) || (Files.notExists(microSdReaderPath))) {
 				cardReaderPath = Paths.get(DEV_SDA1);
 				microSdReaderPath = Paths.get(DEV_SDB1);
 				Thread.sleep(1000L);

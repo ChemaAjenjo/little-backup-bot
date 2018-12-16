@@ -11,6 +11,8 @@ import java.nio.file.Paths;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.logging.BotLogger;
 
+/** Setup raspberry pi */
+
 public class SetupCmd implements Command {
 
 	public static final String TAG = SetupCmd.class.getSimpleName();
