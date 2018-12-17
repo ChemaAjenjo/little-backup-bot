@@ -11,12 +11,14 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
+import org.apache.commons.io.FileUtils;
 import org.telegram.telegrambots.meta.logging.BotLogger;
 
 public class Utils {
@@ -84,5 +86,11 @@ public class Utils {
 		BotLogger.debug(TAG, "label= " + label);
 
 		return label;
+	}
+
+	public static File createBackupLogFile(String process, String content) throws IOException {
+		File backupLogFile = new File("tmp" + File.separator + process);
+		FileUtils.writeStringToFile(backupLogFile, content, Charset.defaultCharset());
+		return backupLogFile;
 	}
 }

@@ -1,6 +1,7 @@
 package com.littlebackup.bot;
 
 import static com.littlebackup.utils.Constants.COMMAND_PREFIX;
+import static com.littlebackup.utils.Constants.MAX_LENGTH_TG_MESSAGE;
 import static com.littlebackup.utils.Constants.TG_CARD_BACKUP_CMD;
 import static com.littlebackup.utils.Constants.TG_DEVICE_BACKUP_CMD;
 import static com.littlebackup.utils.Constants.TG_POWEROFF_CMD;
@@ -8,10 +9,14 @@ import static com.littlebackup.utils.Constants.TG_READER_BACKUP_CMD;
 import static com.littlebackup.utils.Constants.TG_REBOOT_CMD;
 import static com.littlebackup.utils.Constants.TG_START_CMD;
 
+import java.io.IOException;
+
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.logging.BotLogger;
 
 import com.littlebackup.bot.config.LittleBackupBotConfig;
@@ -43,6 +48,7 @@ public class LittleBackupBot extends TelegramLongPollingBot {
 	}
 
 	public void onUpdateReceived(Update update) {
+		String outputCmd = "";
 		try {
 			Long chatId = update.getMessage().getChatId();
 			this.message.setChatId(chatId);
@@ -67,29 +73,29 @@ public class LittleBackupBot extends TelegramLongPollingBot {
 					case TG_READER_BACKUP_CMD:
 						if (!Utils.existsFolders()) {
 							execute(this.message.setText("Starting *reader-backup*"));
-							execute(this.message.setText("`" + new ReaderBackupCmd().execute(this, chatId) + "`"));
+							sendLogBackup(new ReaderBackupCmd().execute(this, chatId), TG_READER_BACKUP_CMD, chatId);
 							execute(this.message.setText("Finished *reader-backup*"));
 						} else {
 							execute(this.message
 									.setText("Raspberry pi is not configured, please execute /start command"));
 						}
 						break;
-						
+
 					case TG_CARD_BACKUP_CMD:
 						if (!Utils.existsFolders()) {
 							execute(this.message.setText("Starting *card-backup*"));
-							execute(this.message.setText("`" + new CardBackupCmd().execute(this, chatId) + "`"));
+							sendLogBackup(new CardBackupCmd().execute(this, chatId), TG_CARD_BACKUP_CMD, chatId);
 							execute(this.message.setText("Finished *card-backup*"));
 						} else {
 							execute(this.message
 									.setText("Raspberry pi is not configured, please execute /start command"));
 						}
 						break;
-						
+
 					case TG_DEVICE_BACKUP_CMD:
 						if (!Utils.existsFolders()) {
 							execute(this.message.setText("Starting *device-backup*"));
-							execute(this.message.setText("`" + new DeviceBackupCmd().execute(this, chatId) + "`"));
+							sendLogBackup(new DeviceBackupCmd().execute(this, chatId), TG_DEVICE_BACKUP_CMD, chatId);
 							execute(this.message.setText("Finished *device-backup*"));
 						} else {
 							execute(this.message
@@ -100,7 +106,7 @@ public class LittleBackupBot extends TelegramLongPollingBot {
 					case TG_REBOOT_CMD:
 						new RebootCmd().execute(this, chatId);
 						break;
-					
+
 					case TG_POWEROFF_CMD:
 						new PowerOffCmd().execute(this, chatId);
 						break;
@@ -113,6 +119,16 @@ public class LittleBackupBot extends TelegramLongPollingBot {
 		} catch (Exception e) {
 			e.printStackTrace();
 			BotLogger.error(TAG, e.getMessage());
+		}
+	}
+
+	private void sendLogBackup(String content, String fileName, Long chatId) throws TelegramApiException, IOException {
+		if (content.length() > MAX_LENGTH_TG_MESSAGE) {
+			execute(this.message.setText("Please download file for watch backup result..."));
+			execute(new SendDocument().setChatId(chatId)
+					.setDocument(Utils.createBackupLogFile(fileName + ".log", content)));
+		} else {
+			execute(this.message.setText("`" + content + "`"));
 		}
 	}
 

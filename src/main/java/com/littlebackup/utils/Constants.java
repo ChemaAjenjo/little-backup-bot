@@ -14,6 +14,7 @@ public class Constants {
 
 	public static final String FORMAT_DATE_YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
 	public static final String COMMAND_PREFIX = "/";
+	public static final Integer MAX_LENGTH_TG_MESSAGE = 4096;
 
 	public static final String TG_START_CMD = "start";
 	public static final String TG_READER_BACKUP_CMD = "readerbackup";
