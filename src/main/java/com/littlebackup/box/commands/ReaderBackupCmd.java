@@ -31,18 +31,10 @@ public class ReaderBackupCmd implements Command {
 		String output = "";
 
 		try {
+			Files.createDirectories(Paths.get(HOME_DIR));
+
 			Path cardReaderPath = Paths.get(DEV_SDA1);
 			Path microSdReaderPath = Paths.get(DEV_SDB1);
-
-			while (Files.notExists(cardReaderPath) || (Files.notExists(microSdReaderPath))) {
-				cardReaderPath = Paths.get(DEV_SDA1);
-				microSdReaderPath = Paths.get(DEV_SDB1);
-				Thread.sleep(1000L);
-				BotLogger.info(TAG, "cardReaderPath.exists= " + (!Files.exists(cardReaderPath)));
-				BotLogger.info(TAG, "microSdReaderPath.exists= " + (!Files.exists(microSdReaderPath)));
-			}
-
-			Files.createDirectories(Paths.get(HOME_DIR));
 
 			if (Files.exists(cardReaderPath)) {
 				output = output + launchBackup(DEV_SDA1, CARD_MOUNT_POINT) + System.lineSeparator();
@@ -88,5 +80,6 @@ public class ReaderBackupCmd implements Command {
 
 		BotLogger.info(TAG, output.getStdOut());
 		return "DEVICE: " + label + System.lineSeparator() + output.getStdOut();
+
 	}
 }
