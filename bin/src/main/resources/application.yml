@@ -1,0 +1,5 @@
+server.port: 1729
+logging:
+  level:
+    ROOT: INFO
+    com.littlebackup.box.commands: DEBUG

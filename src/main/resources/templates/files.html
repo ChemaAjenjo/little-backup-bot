@@ -1,0 +1,10 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>LittleBackupBox - Files</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>   <th:block th:each="file : ${fileList}">
+         <a th:href="@{|/download?id=${file.name}|}"><span th:text=${file.name}></span></a><br/>
+   </th:block></body>
+</html>
