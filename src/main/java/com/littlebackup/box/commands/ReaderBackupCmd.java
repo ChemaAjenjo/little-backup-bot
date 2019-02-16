@@ -1,10 +1,5 @@
 package com.littlebackup.box.commands;
 
-import static com.littlebackup.utils.Constants.CARD_MOUNT_POINT;
-import static com.littlebackup.utils.Constants.DEV_SDA1;
-import static com.littlebackup.utils.Constants.DEV_SDB1;
-import static com.littlebackup.utils.Constants.HOME_DIR;
-import static com.littlebackup.utils.Constants.MICROSD_MOUNT_POINT;
 import static com.littlebackup.utils.Constants.MOUNT_CMD;
 
 import java.io.File;
@@ -17,6 +12,7 @@ import org.telegram.telegrambots.meta.logging.BotLogger;
 
 import com.github.fracpete.processoutput4j.output.CollectingProcessOutput;
 import com.github.fracpete.rsync4j.RSync;
+import com.littlebackup.config.FolderConfig;
 import com.littlebackup.utils.Utils;
 
 /** Backup from multiple reader sdcard to local storage */
@@ -31,16 +27,18 @@ public class ReaderBackupCmd implements Command {
 		String output = "";
 
 		try {
-			Files.createDirectories(Paths.get(HOME_DIR));
+			Files.createDirectories(Paths.get(FolderConfig.HOME_DIR));
 
-			Path cardReaderPath = Paths.get(DEV_SDA1);
-			Path microSdReaderPath = Paths.get(DEV_SDB1);
+			Path cardReaderPath = Paths.get(FolderConfig.DEV_SDA1);
+			Path microSdReaderPath = Paths.get(FolderConfig.DEV_SDB1);
 
 			if (Files.exists(cardReaderPath)) {
-				output = output + launchBackup(DEV_SDA1, CARD_MOUNT_POINT) + System.lineSeparator();
+				output = output + launchBackup(FolderConfig.DEV_SDA1, FolderConfig.MOUNT_POINT_CARD)
+						+ System.lineSeparator();
 			}
 			if (Files.exists(microSdReaderPath)) {
-				output = output + launchBackup(DEV_SDB1, MICROSD_MOUNT_POINT) + System.lineSeparator();
+				output = output + launchBackup(FolderConfig.DEV_SDB1, FolderConfig.MOUNT_POINT_MICROSD)
+						+ System.lineSeparator();
 			}
 
 		} catch (Exception e) {
@@ -59,9 +57,9 @@ public class ReaderBackupCmd implements Command {
 		String fileIdName = Utils.getFileId(mountPoint);
 
 		String label = Utils.getLabelDevice(device);
-		Files.createDirectories(Paths.get(HOME_DIR + File.separator + label));
+		Files.createDirectories(Paths.get(FolderConfig.HOME_DIR + File.separator + label));
 
-		String backupPath = HOME_DIR + File.separator + label + File.separator + fileIdName;
+		String backupPath = FolderConfig.HOME_DIR + File.separator + label + File.separator + fileIdName;
 
 		BotLogger.debug(TAG, "launch rsync command");
 		RSync rsync = new RSync().source(mountPoint + File.separator).destination(backupPath).archive(true)

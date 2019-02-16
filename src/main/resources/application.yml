@@ -1,4 +1,4 @@
-server.port: 1729
+server.port: 80
 
 logging:
   level:
@@ -6,4 +6,17 @@ logging:
     com.little.backup.box.commands: DEBUG
 
 bot:
-  enable: false
+  enable: true
+  token: <your_bot_token>
+  username: <your_bot_name>
+  creatorid: <your_chat_id>
+  
+folder:
+  home: /home/pi/BACKUP
+  dev:
+    sda1: /dev/sda1
+    sdb1: /dev/sdb1
+  mountPoint:
+    card: /media/card
+    microsd: /media/microsd
+    storage: /media/storage

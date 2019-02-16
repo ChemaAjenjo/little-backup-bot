@@ -1,10 +1,7 @@
 package com.littlebackup.utils;
 
 import static com.littlebackup.utils.Constants.BLKID_CMD;
-import static com.littlebackup.utils.Constants.CARD_MOUNT_POINT;
 import static com.littlebackup.utils.Constants.FORMAT_DATE_YYYYMMDDHHMMSS;
-import static com.littlebackup.utils.Constants.HOME_DIR;
-import static com.littlebackup.utils.Constants.MICROSD_MOUNT_POINT;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,11 +12,15 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
 import org.telegram.telegrambots.meta.logging.BotLogger;
+
+import com.littlebackup.config.FolderConfig;
+import com.littlebackup.web.model.Picture;
 
 public class Utils {
 
@@ -33,8 +34,9 @@ public class Utils {
 	}
 
 	public static boolean existsFolders() {
-		return (!Files.exists(Paths.get(CARD_MOUNT_POINT))) || (!Files.exists(Paths.get(MICROSD_MOUNT_POINT)))
-				|| (!Files.exists(Paths.get(HOME_DIR)));
+		return (!Files.exists(Paths.get(FolderConfig.MOUNT_POINT_CARD)))
+				|| (!Files.exists(Paths.get(FolderConfig.MOUNT_POINT_MICROSD)))
+				|| (!Files.exists(Paths.get(FolderConfig.HOME_DIR)));
 	}
 
 	public static String getFileId(String mountPoint) throws java.io.IOException {
@@ -92,5 +94,23 @@ public class Utils {
 		File backupLogFile = new File("tmp" + File.separator + process);
 		FileUtils.writeStringToFile(backupLogFile, content, Charset.defaultCharset());
 		return backupLogFile;
+	}
+
+	public static ArrayList<Picture> getFileListing(String directoryName) {
+		File[] files = new File(directoryName).listFiles();
+
+		ArrayList<Picture> filPaths = new ArrayList<Picture>();
+		for (File file : files) {
+			if (file.isFile()) {
+				filPaths.add(new Picture(file.getAbsolutePath(), file.getName()));
+				BotLogger.info(TAG, "Added " + file.getAbsolutePath());
+			} else if (file.isDirectory()) {
+				for (Picture file2 : getFileListing(file.getAbsolutePath())) {
+					filPaths.add(file2);
+					BotLogger.info(TAG, "Added " + file2.getPath());
+				}
+			}
+		}
+		return filPaths;
 	}
 }

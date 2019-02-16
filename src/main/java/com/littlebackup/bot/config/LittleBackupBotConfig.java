@@ -2,11 +2,9 @@ package com.littlebackup.bot.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
-@Configuration
-@PropertySource({ "file:config/little-backup-bot.properties" })
+@Component
 public class LittleBackupBotConfig {
 
 	@Value("${bot.token}")

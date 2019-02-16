@@ -1,15 +1,13 @@
 package com.littlebackup.box.commands;
 
-import static com.littlebackup.utils.Constants.CARD_MOUNT_POINT;
-import static com.littlebackup.utils.Constants.HOME_DIR;
-import static com.littlebackup.utils.Constants.MICROSD_MOUNT_POINT;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.logging.BotLogger;
+
+import com.littlebackup.config.FolderConfig;
 
 /** Setup raspberry pi */
 
@@ -23,20 +21,21 @@ public class SetupCmd implements Command {
 		try {
 			String output = "Created folders: " + System.lineSeparator();
 
-			if (!Files.exists(Paths.get(CARD_MOUNT_POINT))) {
+			if (!Files.exists(Paths.get(FolderConfig.MOUNT_POINT_CARD))) {
 
-				output = output + Files.createDirectories(Paths.get(CARD_MOUNT_POINT)).toString()
+				output = output + Files.createDirectories(Paths.get(FolderConfig.MOUNT_POINT_CARD)).toString()
 						+ System.lineSeparator();
-				BotLogger.info(TAG, "Created " + CARD_MOUNT_POINT);
+				BotLogger.info(TAG, "Created " + FolderConfig.MOUNT_POINT_CARD);
 			}
-			if (!Files.exists(Paths.get(MICROSD_MOUNT_POINT))) {
-				output = output + Files.createDirectories(Paths.get(MICROSD_MOUNT_POINT)).toString()
+			if (!Files.exists(Paths.get(FolderConfig.MOUNT_POINT_MICROSD))) {
+				output = output + Files.createDirectories(Paths.get(FolderConfig.MOUNT_POINT_MICROSD)).toString()
 						+ System.lineSeparator();
-				BotLogger.info(TAG, "Created " + MICROSD_MOUNT_POINT);
+				BotLogger.info(TAG, "Created " + FolderConfig.MOUNT_POINT_MICROSD);
 			}
-			if (!Files.exists(Paths.get(HOME_DIR))) {
-				output = output + Files.createDirectories(Paths.get(HOME_DIR)).toString() + System.lineSeparator();
-				BotLogger.info(TAG, "Created " + HOME_DIR);
+			if (!Files.exists(Paths.get(FolderConfig.HOME_DIR))) {
+				output = output + Files.createDirectories(Paths.get(FolderConfig.HOME_DIR)).toString()
+						+ System.lineSeparator();
+				BotLogger.info(TAG, "Created " + FolderConfig.HOME_DIR);
 			}
 
 			return output;

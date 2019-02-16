@@ -1,10 +1,6 @@
 package com.littlebackup.box.commands;
 
-import static com.littlebackup.utils.Constants.CARD_MOUNT_POINT;
-import static com.littlebackup.utils.Constants.DEV_SDA1;
-import static com.littlebackup.utils.Constants.DEV_SDB1;
 import static com.littlebackup.utils.Constants.MOUNT_CMD;
-import static com.littlebackup.utils.Constants.STORAGE_MOUNT_POINT;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -18,6 +14,7 @@ import org.telegram.telegrambots.meta.logging.BotLogger;
 
 import com.github.fracpete.processoutput4j.output.CollectingProcessOutput;
 import com.github.fracpete.rsync4j.RSync;
+import com.littlebackup.config.FolderConfig;
 import com.littlebackup.utils.Utils;
 
 /** Backup from sdcard to storage device */
@@ -30,45 +27,50 @@ public class CardBackupCmd implements Command {
 	public String execute(TelegramLongPollingBot bot, Long chatId) {
 
 		try {
-			Path storagePath = Paths.get(DEV_SDA1);
-			Path cardPath = Paths.get(DEV_SDB1);
+			Path storagePath = Paths.get(FolderConfig.DEV_SDA1);
+			Path cardPath = Paths.get(FolderConfig.DEV_SDB1);
 
 			bot.execute(new SendMessage().setParseMode(ParseMode.MARKDOWN).setChatId(chatId)
 					.setText("Insert *storage device*"));
 			while (Files.notExists(storagePath)) {
-				storagePath = Paths.get(DEV_SDA1);
+				storagePath = Paths.get(FolderConfig.DEV_SDA1);
 				Thread.sleep(1000L);
 			}
 			// When the USB storage device is detected, mount it
-			Runtime.getRuntime().exec(new String[] { MOUNT_CMD, DEV_SDA1, STORAGE_MOUNT_POINT }).waitFor();
-			BotLogger.info(TAG, "Mounted " + STORAGE_MOUNT_POINT);
+			Runtime.getRuntime()
+					.exec(new String[] { MOUNT_CMD, FolderConfig.DEV_SDA1, FolderConfig.MOUNT_POINT_STORAGE })
+					.waitFor();
+			BotLogger.info(TAG, "Mounted " + FolderConfig.MOUNT_POINT_STORAGE);
 
 			bot.execute(new SendMessage().setParseMode(ParseMode.MARKDOWN).setChatId(chatId).setText("Insert *card*"));
 			while (Files.notExists(cardPath)) {
-				cardPath = Paths.get(DEV_SDB1);
+				cardPath = Paths.get(FolderConfig.DEV_SDB1);
 				Thread.sleep(1000L);
 			}
 
 			if (Files.exists(cardPath)) {
 				// If the card reader is detected, mount it
-				BotLogger.debug(TAG, "Mounting " + DEV_SDB1 + " into " + CARD_MOUNT_POINT);
-				Runtime.getRuntime().exec(new String[] { MOUNT_CMD, DEV_SDB1, CARD_MOUNT_POINT }).waitFor();
+				BotLogger.debug(TAG, "Mounting " + FolderConfig.DEV_SDB1 + " into " + FolderConfig.MOUNT_POINT_CARD);
+				Runtime.getRuntime()
+						.exec(new String[] { MOUNT_CMD, FolderConfig.DEV_SDB1, FolderConfig.MOUNT_POINT_CARD })
+						.waitFor();
 
 				// Obtain card's UUID
-				String label = Utils.getLabelDevice(DEV_SDB1);
+				String label = Utils.getLabelDevice(FolderConfig.DEV_SDB1);
 
 				// Set the backup path
-				String backupPath = STORAGE_MOUNT_POINT + File.separator + Utils.getFileId(CARD_MOUNT_POINT);
+				String backupPath = FolderConfig.MOUNT_POINT_STORAGE + File.separator
+						+ Utils.getFileId(FolderConfig.MOUNT_POINT_CARD);
 
 				BotLogger.debug(TAG, "launch rsync command");
 				// Perform backup using rsync
 				bot.execute(new SendMessage().setParseMode(ParseMode.MARKDOWN).setChatId(chatId)
 						.setText("Making backup... Please wait."));
-				RSync rsync = new RSync().source(CARD_MOUNT_POINT + File.separator).destination(backupPath)
+				RSync rsync = new RSync().source(FolderConfig.MOUNT_POINT_CARD + File.separator).destination(backupPath)
 						.archive(true).verbose(true).exclude(new String[] { "*.id", "*.dat", "IndexerVolumeGuid" });
 				CollectingProcessOutput output = rsync.execute();
 
-				BotLogger.info(TAG, "Backup from " + CARD_MOUNT_POINT + " finished with exit code = "
+				BotLogger.info(TAG, "Backup from " + FolderConfig.MOUNT_POINT_CARD + " finished with exit code = "
 						+ String.valueOf(output.getExitCode()));
 
 				if (output.getExitCode() > 0) {
