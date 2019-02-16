@@ -2,6 +2,7 @@
 import java.util.logging.Level;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,6 +23,9 @@ public class LittleBackupBotApplication implements CommandLineRunner {
 
 	private LittleBackupBotConfig botConfig;
 
+	@Value("${bot.enable}")
+	private boolean enableBot;
+
 	@Autowired
 	public void setBotConfig(LittleBackupBotConfig botConfig) {
 		this.botConfig = botConfig;
@@ -30,15 +34,18 @@ public class LittleBackupBotApplication implements CommandLineRunner {
 
 	public void run(String... args) throws Exception {
 		BotLogger.setLevel(Level.ALL);
-		BotLogger.info(TAG, "Starting bot");
 
-		TelegramBotsApi api = new TelegramBotsApi();
-		try {
-			api.registerBot(new LittleBackupBot(this.botConfig));
+		if (enableBot) {
+			BotLogger.info(TAG, "Starting bot");
 
-			BotLogger.info(TAG, "Bot running...");
-		} catch (TelegramApiException e) {
-			BotLogger.error(TAG, e.getCause());
+			TelegramBotsApi api = new TelegramBotsApi();
+			try {
+				api.registerBot(new LittleBackupBot(this.botConfig));
+
+				BotLogger.info(TAG, "Bot running...");
+			} catch (TelegramApiException e) {
+				BotLogger.error(TAG, e.getCause());
+			}
 		}
 	}
 
