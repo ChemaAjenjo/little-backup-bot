@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.littlebackup.config.FolderConfig;
+import com.littlebackup.box.config.FolderConfig;
 import com.littlebackup.utils.Utils;
-import com.littlebackup.web.model.Picture;
+import com.littlebackup.web.model.PictureFile;
 
 @Controller
 public class LittleBackupWebController {
@@ -42,7 +42,7 @@ public class LittleBackupWebController {
 
 		File file = null;
 
-		for (Picture picture : Utils.getFileListing(FolderConfig.HOME_DIR)) {
+		for (PictureFile picture : Utils.getFileListing(FolderConfig.HOME_DIR)) {
 			if (picture.getName().equals(id)) {
 				file = new File(picture.getPath());
 			}

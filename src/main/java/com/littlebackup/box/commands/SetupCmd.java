@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.logging.BotLogger;
 
-import com.littlebackup.config.FolderConfig;
+import com.littlebackup.box.config.FolderConfig;
 
 /** Setup raspberry pi */
 

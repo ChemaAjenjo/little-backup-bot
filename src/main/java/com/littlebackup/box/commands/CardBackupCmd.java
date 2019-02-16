@@ -14,7 +14,7 @@ import org.telegram.telegrambots.meta.logging.BotLogger;
 
 import com.github.fracpete.processoutput4j.output.CollectingProcessOutput;
 import com.github.fracpete.rsync4j.RSync;
-import com.littlebackup.config.FolderConfig;
+import com.littlebackup.box.config.FolderConfig;
 import com.littlebackup.utils.Utils;
 
 /** Backup from sdcard to storage device */

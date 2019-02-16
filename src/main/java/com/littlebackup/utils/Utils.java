@@ -19,8 +19,8 @@ import java.util.Date;
 import org.apache.commons.io.FileUtils;
 import org.telegram.telegrambots.meta.logging.BotLogger;
 
-import com.littlebackup.config.FolderConfig;
-import com.littlebackup.web.model.Picture;
+import com.littlebackup.box.config.FolderConfig;
+import com.littlebackup.web.model.PictureFile;
 
 public class Utils {
 
@@ -96,16 +96,16 @@ public class Utils {
 		return backupLogFile;
 	}
 
-	public static ArrayList<Picture> getFileListing(String directoryName) {
+	public static ArrayList<PictureFile> getFileListing(String directoryName) {
 		File[] files = new File(directoryName).listFiles();
 
-		ArrayList<Picture> filPaths = new ArrayList<Picture>();
+		ArrayList<PictureFile> filPaths = new ArrayList<PictureFile>();
 		for (File file : files) {
 			if (file.isFile()) {
-				filPaths.add(new Picture(file.getAbsolutePath(), file.getName()));
+				filPaths.add(new PictureFile(file.getAbsolutePath(), file.getName()));
 				BotLogger.info(TAG, "Added " + file.getAbsolutePath());
 			} else if (file.isDirectory()) {
-				for (Picture file2 : getFileListing(file.getAbsolutePath())) {
+				for (PictureFile file2 : getFileListing(file.getAbsolutePath())) {
 					filPaths.add(file2);
 					BotLogger.info(TAG, "Added " + file2.getPath());
 				}
