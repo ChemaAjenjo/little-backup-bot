@@ -6,10 +6,10 @@ logging:
     com.little.backup.box.commands: DEBUG
 
 bot:
-  enable: true
-  token: <your_bot_token>
-  username: <your_bot_name>
-  creatorid: <your_chat_id>
+  enable: false
+  token: 
+  username: 
+  creatorid: 
   
 folder:
   home: /home/pi/BACKUP

@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -15,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 
 import org.apache.commons.io.FileUtils;
 import org.telegram.telegrambots.meta.logging.BotLogger;
@@ -103,14 +106,28 @@ public class Utils {
 		for (File file : files) {
 			if (file.isFile()) {
 				filPaths.add(new PictureFile(file.getAbsolutePath(), file.getName()));
-				BotLogger.info(TAG, "Added " + file.getAbsolutePath());
 			} else if (file.isDirectory()) {
 				for (PictureFile file2 : getFileListing(file.getAbsolutePath())) {
 					filPaths.add(file2);
-					BotLogger.info(TAG, "Added " + file2.getPath());
 				}
 			}
 		}
 		return filPaths;
+	}
+
+	public static HashMap<String, String> getHostData() {
+
+		HashMap<String, String> dataMap = new HashMap<String, String>();
+		try {
+			InetAddress ip = InetAddress.getLocalHost();
+			dataMap.put("hostname", ip.getHostName());
+			dataMap.put("ip", ip.getHostAddress());
+
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			BotLogger.error(TAG, e.getCause());
+		}
+
+		return dataMap;
 	}
 }

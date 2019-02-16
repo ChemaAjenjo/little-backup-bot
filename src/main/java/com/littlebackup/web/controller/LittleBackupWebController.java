@@ -11,6 +11,8 @@ import java.nio.charset.Charset;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.FileCopyUtils;
@@ -25,8 +27,19 @@ import com.littlebackup.web.model.PictureFile;
 @Controller
 public class LittleBackupWebController {
 
+	public static final String TAG = LittleBackupWebController.class.getSimpleName();
+
+	@Autowired
+	MessageSource msgSource;
+
+	@RequestMapping(value = { "/dashboard" }, method = RequestMethod.GET)
+	public String getDashboardPage(ModelMap model) {
+		model.addAllAttributes(Utils.getHostData());
+		return "dashboard";
+	}
+
 	@RequestMapping(value = { "/welcome" }, method = RequestMethod.GET)
-	public String getHomePage(ModelMap model) {
+	public String getWelcome(ModelMap model) {
 		model.addAttribute("name", "mundo");
 		return "welcome";
 	}
